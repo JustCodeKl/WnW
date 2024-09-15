@@ -1,14 +1,16 @@
+import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import Header from '../components/Header'
+import LoginPage from './pages/LoginPage'
+import Index from './pages/Index'
 
 function App() {
 
   return (
-    <>
-      <div>
-        <Header/>
-      </div>
-    </>
+    <Routes>
+      <Route index element={ <Index />} />
+      <Route path='/login' element={ <LoginPage />} />
+    </Routes>
+
   )
 }
 
