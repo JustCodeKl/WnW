@@ -12,8 +12,7 @@ export default function LoginPage() {
                     <input type="password" name="" placeholder="Enter your password here" id="" />
                     <button type="submit" className="primary">Login</button>
                     <div className="text-center mt-4 text-gray-500">
-                        Don't have an account yet? 
-                        <Link to="/register" className="text-primary"> register now</Link>
+                        Don't have an account yet? <Link to="/register" className="text-primary underline"> Register now</Link>
                     </div>
                 </form>
             </div>
