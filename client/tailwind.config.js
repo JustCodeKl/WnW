@@ -7,7 +7,8 @@ export default {
     extend: {
       colors: {
         primary: '#F5385D',
-      }
+      },
+      display: ["group-hover"]
     },
   },
   plugins: [],

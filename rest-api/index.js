@@ -6,6 +6,10 @@ const app = express();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const download = require('image-downloader');
+const multer = require('multer');
+const fs = require('fs');
+const Place = require('./models/Place.js')
 require('dotenv').config();
 
 const bcryptSalt = bcrypt.genSaltSync(10);
@@ -13,6 +17,8 @@ const jwtSecret = 'jscbshcshssdsuegfezefbekwr3zzz23'
 
 app.use(express.json());
 app.use(cookieParser());
+// Allow all uploads to be displayed in the frontend side
+app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use(cors({
     credentials: true,
     origin: 'http://localhost:5173'
@@ -87,5 +93,71 @@ app.get('/profile', (req, res) => {
 app.post('/logout', (req, res) => {
     res.cookie('token', '').json('Logged out succesful')
 })
+
+
+app.post('/upload-by-link', async (req, res) => {
+    // yarn add image-downloader
+    const {link} = req.body;
+    const newName = 'photo_' + Date.now() + '.jpg';
+    await download.image({
+        url: link,
+        dest: __dirname + '/uploads/' + newName
+    });
+    res.json({newName});
+})
+
+const photosMiddleware = multer({dest: 'uploads'});
+
+app.post('/upload', photosMiddleware.array('photos', 100), (req, res) => {
+    const uploadedPhotos = []
+    for (let i = 0; i < req.files.length; i++) {
+        const {path, originalname} = req.files[i];
+        const parts = originalname.split('.');
+        const ext = parts[parts.length - 1];
+        const newPath = (path + '.' + ext);
+        fs.renameSync(path, newPath);       
+        uploadedPhotos.push({
+            newName: newPath.replace('uploads\\', '')
+        }); 
+    }
+
+    res.json(uploadedPhotos);
+});
+
+
+app.post('/places', async (req, res) => {
+    const {token} = req.cookies;
+    const {title, address, addedPhotos, 
+        extraInfo, description, perks, 
+        checkin, checkout, guests} = req.body;
+    jwt.verify(token, jwtSecret, {}, async (err, result) => {
+        if(err) throw err; 
+        const placeDoc = await Place.create({
+            owner: result.id,
+            title,
+            address,
+            description,
+            extraInfo,
+            photos: addedPhotos,
+            checkIn: checkin,
+            checkOut: checkout,
+            perks,
+            maxGuests: guests
+        });
+        res.json(placeDoc);
+    });
+
+});
+
+
+app.get('/places', async(req, res) => {
+    const {token} = req.cookies;
+    jwt.verify(token, jwtSecret, {}, async (err, result) => {
+        if(err) throw err;
+        const {id} = result;
+        res.json( await Place.find({owner: id}));
+    });
+})
+
 // Port for listening on api request
 app.listen(4000)
