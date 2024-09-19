@@ -129,7 +129,7 @@ app.post('/places', async (req, res) => {
     const {token} = req.cookies;
     const {title, address, addedPhotos, 
         extraInfo, description, perks, 
-        checkin, checkout, guests} = req.body;
+        checkin, checkout, guests, price} = req.body;
     jwt.verify(token, jwtSecret, {}, async (err, result) => {
         if(err) throw err; 
         const placeDoc = await Place.create({
@@ -142,7 +142,8 @@ app.post('/places', async (req, res) => {
             checkIn: checkin,
             checkOut: checkout,
             perks,
-            maxGuests: guests
+            maxGuests: guests,
+            price
         });
         res.json(placeDoc);
     });
@@ -150,13 +151,53 @@ app.post('/places', async (req, res) => {
 });
 
 
-app.get('/places', async(req, res) => {
+app.get('/user-places', async(req, res) => {
     const {token} = req.cookies;
     jwt.verify(token, jwtSecret, {}, async (err, result) => {
         if(err) throw err;
         const {id} = result;
         res.json( await Place.find({owner: id}));
     });
+});
+
+app.get('/places', async(req, res) => {
+    
+    res.json( await Place.find());
+})
+
+
+app.get('/places/:id', async(req, res) => {
+    const {id} = req.params;
+    res.json( await Place.findById(id));
+})
+
+
+app.put('/places/', async(req, res) => {
+    const {token} = req.cookies;
+    const {id, title, address, addedPhotos, 
+        extraInfo, description, perks, 
+        checkin, checkout, guests, price} = req.body;
+    jwt.verify(token, jwtSecret, {}, async (err, result) => {
+        const placeDoc = await Place.findById(id);
+        if(err) throw err;
+        if(result.id === placeDoc.owner.toString() ){
+            placeDoc.set({
+                    title,
+                    address,
+                    description,
+                    extraInfo,
+                    photos: addedPhotos,
+                    checkIn: checkin,
+                    checkOut: checkout,
+                    perks,
+                    maxGuests: guests,
+                    price
+                })
+            await placeDoc.save();
+            res.json(placeDoc);
+        }
+    });
+
 })
 
 // Port for listening on api request

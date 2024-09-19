@@ -9,6 +9,7 @@ export function UserContextProvider({children}){
     const [user, setUser] = useState(null);
     const [ready, setReady] = useState(false);
     const [logout, setLogout] = useState(false);
+    const [redirect, setRedirect] = useState('');
 
     useEffect(() => {
         if(!user){
@@ -22,7 +23,7 @@ export function UserContextProvider({children}){
     }, [user])
 
     return (
-       <UserContext.Provider value={{user, setUser, ready, logout, setLogout}}>
+       <UserContext.Provider value={{user, setUser, ready, logout, setLogout, redirect, setRedirect}}>
          {
             children
         }
