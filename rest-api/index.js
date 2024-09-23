@@ -161,7 +161,6 @@ app.get('/user-places', async(req, res) => {
 });
 
 app.get('/places', async(req, res) => {
-    
     res.json( await Place.find());
 })
 

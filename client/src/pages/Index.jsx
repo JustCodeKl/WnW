@@ -7,7 +7,7 @@ export default function Index(){
     useEffect(() => {
         axios.get('/places')
             .then(response => {
-                setAllPlaces([...response.data, ...response.data, ...response.data])
+                setAllPlaces(response.data)
             })
     }, [])
 
@@ -17,7 +17,7 @@ export default function Index(){
                     {
                         allPlaces.length > 0 && allPlaces.map((place, index) =>
                         (
-                            <Link to={'/places/' + place._id} key={index}>
+                            <Link to={'/place/' + place._id} key={index}>
                                 
                                 <div className="grow shrink-0 rounded-lg flex shadow-md shadow-gray-200 z-0 " >
                                     {
