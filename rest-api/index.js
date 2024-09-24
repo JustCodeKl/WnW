@@ -10,6 +10,7 @@ const download = require('image-downloader');
 const multer = require('multer');
 const fs = require('fs');
 const Place = require('./models/Place.js')
+const Booking = require('./models/Booking.js')
 require('dotenv').config();
 
 const bcryptSalt = bcrypt.genSaltSync(10);
@@ -199,5 +200,42 @@ app.put('/places/', async(req, res) => {
 
 })
 
+app.post('/bookings', async (req, res) => {
+    const {token} = req.cookies;
+    const {
+        place, numberOfGuests, checkIn, checkOut, name, phone, mail, price
+    } = req.body;
+
+    jwt.verify(token, jwtSecret, {}, async (err, result) => {
+        if(err) throw err; 
+        const newBooking = await Booking.create({
+            place,
+            userId: result.id,
+            numberOfGuests,
+            name,
+            checkIn, checkOut, phone, mail, price
+        });
+        res.json(newBooking);
+    });
+
+})
+
+export   function compareByDate(a, b) {
+    const dateA = Date.parse(a.created);
+    const dateB = Date.parse(b.created)
+    return dateB - dateA;
+  }
+
+
+app.get('/user-bookings', async(req, res) => {
+    const {token} = req.cookies;
+    jwt.verify(token, jwtSecret, {}, async (err, result) => {
+        if(err) throw err;
+        const {id} = result;
+        let bookingList = await Booking.find({userId: id}).populate('place')
+        bookingList.sort(compareByDate)
+        res.json(bookingList);
+    });
+});
 // Port for listening on api request
 app.listen(4000)
