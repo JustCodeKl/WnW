@@ -32,14 +32,14 @@ export default function BookingsPage(){
         <>
             <NavBar />
             <nav className="w-full my-6 flex gap-4 justify-center" >
-                <Link to="/account/bookings/upcoming" className={linkClasses('upcoming')}> 
-                    Bevorstehende 
+                <Link to="/account/bookings/old" className={linkClasses('old')}> 
+                    Old 
                 </Link>
                 <Link to="/account/bookings/all" className={linkClasses('all')}> 
-                    Alle 
+                    All 
                 </Link>
-                <Link to="/account/bookings/old" className={linkClasses('old')}> 
-                    Vergangen 
+                <Link to="/account/bookings/upcoming" className={linkClasses('upcoming')}> 
+                    Upcoming 
                 </Link>
             </nav>
                 {
@@ -68,7 +68,7 @@ export default function BookingsPage(){
                                     
                                     <div className=" border-t-2 border-gray-300 mt-1 py-2">
                                         <div className="">
-                                            {booking.checkIn.split('T')[0] + ' ' + booking.place.checkIn} {'-'} {booking.checkOut.split('T')[0] + ' ' + booking.place.checkOut}    
+                                            {booking.checkIn.split('T')[0] + ' ' + booking.place.checkIn} &rarr; {booking.checkOut.split('T')[0] + ' ' + booking.place.checkOut}    
                                         </div> 
                                         <div className="">  
                                             <span className="border-r mr-2 border-gray-500"> Number of guests: {booking.numberOfGuests} </span>
@@ -108,7 +108,7 @@ export default function BookingsPage(){
                                     
                                     <div className=" border-t-2 border-gray-300 mt-1 py-2">
                                         <div className="">
-                                            {booking.checkIn.split('T')[0] + ' ' + booking.place.checkIn} {'-'} {booking.checkOut.split('T')[0] + ' ' + booking.place.checkOut}    
+                                            {booking.checkIn.split('T')[0] + ' ' + booking.place.checkIn} &rarr; {booking.checkOut.split('T')[0] + ' ' + booking.place.checkOut}    
                                         </div> 
                                         <div className="">  
                                             <span className="border-r mr-2 border-gray-500"> Number of guests: {booking.numberOfGuests} </span>
@@ -150,7 +150,7 @@ export default function BookingsPage(){
                                     
                                     <div className=" border-t-2 border-gray-300 mt-1 py-2">
                                         <div className="">
-                                            {booking.checkIn.split('T')[0] + ' ' + booking.place.checkIn} {'-'} {booking.checkOut.split('T')[0] + ' ' + booking.place.checkOut}    
+                                            {booking.checkIn.split('T')[0] + ' ' + booking.place.checkIn} &rarr; {booking.checkOut.split('T')[0] + ' ' + booking.place.checkOut}    
                                         </div> 
                                         <div className="">  
                                             <span className="border-r mr-2 border-gray-500"> Number of guests: {booking.numberOfGuests} </span>

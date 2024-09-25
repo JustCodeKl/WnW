@@ -28,10 +28,6 @@ app.use(cors({
 
 mongoose.connect(process.env.MONGO_URL);
 
-app.get('/test', (req, res) => {
-    res.json('Test Ok')
-});
-
 // MongoDB_password: jnEEsPU4O4AXIaM0
 
 app.post('/register', async (req, res) => {
@@ -57,8 +53,9 @@ app.post('/login', async (req, res) => {
     const {email, password} = req.body;
 
    const user = await User.findOne({email})
+   console.log(user);
 
-   if(user) {
+   if(user && user !== null) {
         const passOK = bcrypt.compareSync(password, user.password);
         if(passOK) {
             // yarn add jsonwebtoken
@@ -70,9 +67,9 @@ app.post('/login', async (req, res) => {
                 res.cookie('token', token).json(user);
             })
         }
-        else res.json('Password not Ok')
+        else res.json({responseStatus: 'Password not Ok'})
     }
-   else res.json('Not found')
+   else res.json({responseStatus:'User not found'})
 
 })
 
@@ -220,9 +217,9 @@ app.post('/bookings', async (req, res) => {
 
 })
 
-export   function compareByDate(a, b) {
-    const dateA = Date.parse(a.created);
-    const dateB = Date.parse(b.created)
+function compareByDate(a, b) {
+    const dateA = Date.parse(a.checkOut);
+    const dateB = Date.parse(b.checkOut)
     return dateB - dateA;
   }
 

@@ -14,11 +14,14 @@ export default function LoginPage() {
     async function handleLogin(ev){
         ev.preventDefault();
         try {
-             const userResponse = axios.post('/login', {email, password})
-             setUser((await userResponse).data);
-             alert('Login successful');
-             setLogout(false);
-             setRedirect(true);
+             const userResponse = await axios.post('/login', {email, password});    
+             if(userResponse.data?.responseStatus !== "Password not Ok" && userResponse.data?.responseStatus !== "User not found"){
+                setUser((await userResponse).data);
+                alert('Login successful');
+                setLogout(false);
+                setRedirect(true);
+             }
+             else alert('Login failed. ' + userResponse.data?.responseStatus);
         } catch (error) {
             alert('Login failed :(');
             console.log(error);
