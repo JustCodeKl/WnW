@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 
 export default function RegisterPage(){
@@ -8,6 +8,7 @@ export default function RegisterPage(){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [repeat, setRepeat] = useState('');
+    const [redirect, setRedirect] = useState(false);
 
    async function registerUser(e){
         e.preventDefault();
@@ -16,14 +17,17 @@ export default function RegisterPage(){
                 name,
                 email,
                 password
-            })
-            alert('Registration was successful :). Try to login now')
+            });
+            alert('Registration was successful :). Try to login now');
+            setRedirect(true);
             
         } catch (er) {
-            alert('Registration failed :(')
+            alert('Registration failed :(');
             console.error(er);
         }
     }
+
+    if(redirect) return < Navigate to='/login' />;
 
     return (
         <div className="mt-4 grow flex items-center justify-around">
@@ -41,5 +45,5 @@ export default function RegisterPage(){
                 </form>
             </div>
         </div>
-    )
+    );
 }
