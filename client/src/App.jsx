@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import LoginPage from './pages/LoginPage';
-import Index from './pages/Index';
+import IndexPage from './pages/IndexPage';
 import Layout from './Layout';
 import RegisterPage from './pages/RegisterPage';
 import axios from 'axios';
@@ -22,7 +22,7 @@ function App() {
     <UserContextProvider>
       <Routes>
         <Route path="/" element={ <Layout />} >
-          <Route index element={ <Index />} />
+          <Route index element={ <IndexPage />} />
           <Route path='/login' element={ <LoginPage />} />
           <Route path='/register' element={<RegisterPage />} />
           {/*<Route path='/account' element={<AccountPage />} />
