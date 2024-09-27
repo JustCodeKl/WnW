@@ -21,6 +21,10 @@ jobs:
         node-version: '22.x'
         cache-dependency-path: "./client/yarn.lock"
     - name: Run Yarn 
-      run: yarn
+      run: |
+            cd ./client
+            yarn
     - name: Run tests
-      run: yarn test
+      run: |
+            cd ./client
+            yarn test
