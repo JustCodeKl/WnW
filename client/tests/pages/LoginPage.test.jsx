@@ -105,7 +105,9 @@ describe('LoginPage', () => {
       });
 
       it('shows error when password is not correct', async () => {
+        // Mock the window.alert
         const alertSpy = await vi.spyOn(window, 'alert').mockImplementation(vi.fn());
+
         // Mock API Antwort für falsches Passwort
         mockAxios.onPost('/login').reply(200, { responseStatus: 'Password not Ok' });
     
@@ -134,7 +136,9 @@ describe('LoginPage', () => {
       });
     
       it('shows error message when API call fails (catch block)', async () => {
+        // Mock the window.alert
         const alertSpy = await vi.spyOn(window, 'alert').mockImplementation(vi.fn());
+        
         // Simuliere einen Fehler bei der API-Anfrage
         mockAxios.onPost('/login').networkError();
     
