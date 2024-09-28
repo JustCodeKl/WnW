@@ -24,7 +24,7 @@ import {
         <MenuList className="w-[3%] rounded-none">
             {
                 guestsList?.length > 0 && guestsList.map((guest, index) => 
-                    <MenuItem key={index} className="p-2 border rounded-none hover:bg-primary hover:text-white hover:font-bold" onClick={() => setNbGuests(guestsList?.[index])}> {guest}</MenuItem>
+                    <MenuItem role="item" key={index} className="p-2 border rounded-none hover:bg-primary hover:text-white hover:font-bold" onClick={() => setNbGuests(guestsList?.[index])}> {guest}</MenuItem>
                     )
             }
         </MenuList>

@@ -1,4 +1,4 @@
-import { it, expect, describe, beforeEach, afterEach, vi } from 'vitest';
+import { it, expect, describe, beforeEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import axios from 'axios';
