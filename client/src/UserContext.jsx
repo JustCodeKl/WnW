@@ -11,6 +11,7 @@ export function UserContextProvider({children}){
     const [logout, setLogout] = useState(false);
     const [redirect, setRedirect] = useState('');
     const [usersList, setUsersList] = useState([]);
+    const [addedPlacesList, setAddedPlacesList] = useState([]);
 
     useEffect(() => {
         if(!user){
@@ -20,15 +21,18 @@ export function UserContextProvider({children}){
                     setReady(true);
                 });
             
-        }
+        };
         axios.get('/users')
         .then(response => 
             setUsersList(response.data)
-        )
+        );
+        axios.get("/user-places").then((response) => {
+            setAddedPlacesList(response.data);
+          });
     }, [user, usersList])
 
     return (
-       <UserContext.Provider value={{user, setUser, ready, logout, setLogout, redirect, setRedirect, usersList}}>
+       <UserContext.Provider value={{user, setUser, ready, logout, setLogout, redirect, setRedirect, usersList, addedPlacesList}}>
          {
             children
         }

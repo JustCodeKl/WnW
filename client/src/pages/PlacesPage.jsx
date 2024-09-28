@@ -1,17 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext} from "react";
 import { Link, /* Navigate */ useParams } from "react-router-dom";
-import axios from "axios";
 import NavBar from "../components/NavBar";
+import { UserContext } from "../UserContext";
 
 export default function PlacesPage() {
   const { action } = useParams();
-  const [addedPlacesList, setAddedPlacesList] = useState([]);
-
-  useEffect(() => {
-    axios.get("/user-places").then((response) => {
-      setAddedPlacesList(response.data);
-    });
-  }, []);
+  const { addedPlacesList } = useContext(UserContext);
 
   /* if(redirect && action === "new") {
         return <Navigate to={redirect} />
@@ -49,8 +43,8 @@ export default function PlacesPage() {
         )}
         {action !== "new" && (
           <div className="my-4 lg:mx-20">
-            {addedPlacesList.length > 0 &&
-              addedPlacesList.map((place, index) => (
+            {addedPlacesList?.length > 0 &&
+              addedPlacesList?.map((place, index) => (
                 <Link
                   to={"/account/places/" + place._id}
                   key={place._id + index}
