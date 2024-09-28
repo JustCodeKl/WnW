@@ -77,9 +77,11 @@ describe('RegisterPage', () => {
 
       it('should display error if email is already registered', async () => {
         render(
-          <MemoryRouter>
-            <RegisterPage />
-          </MemoryRouter>
+            <UserContext.Provider value={{usersList: mockUsers}}>
+            <MemoryRouter>
+                <RegisterPage />
+            </MemoryRouter>
+            </UserContext.Provider>
         );
         // E-Mail und Benutzername eingeben
         await userEvent.type(screen.getByPlaceholderText(/your username/i), 'johndoe');
@@ -93,11 +95,12 @@ describe('RegisterPage', () => {
         // Überprüfen, ob die Fehlermeldung "This email is already registered" angezeigt wird
         await waitFor(() => {
           expect(spyAlert).toHaveBeenCalledTimes(1);
+          expect(spyAlert).toHaveBeenCalledWith('Please enter another E-mail');
         });
       });
 
       it('should handle registration failure', async () => {
-        mock.onPost('/register').networkError();
+        mock.onPost('/register').reply(500);
 
         render(<UserContext.Provider value={{usersList: mockUsers}}>
                 <MemoryRouter>
@@ -131,7 +134,7 @@ describe('RegisterPage', () => {
             email: 'newuser@example.com',
             password: 'password123'
         } });
-        
+
         render(
           <MemoryRouter>
             <RegisterPage />
