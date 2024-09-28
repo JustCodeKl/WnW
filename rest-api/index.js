@@ -91,6 +91,10 @@ app.post('/logout', (req, res) => {
     res.cookie('token', '').json('Logged out succesful')
 })
 
+app.get('/users', async (req, res) => {
+    res.json(await User.find());
+})
+
 
 app.post('/upload-by-link', async (req, res) => {
     // yarn add image-downloader

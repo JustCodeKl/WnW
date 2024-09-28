@@ -1,14 +1,14 @@
 import { it, expect, describe, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import LoginPage from '../../src/pages/LoginPage';
-import { BrowserRouter } from 'react-router-dom';
-import { MemoryRouter } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import userEvent from '@testing-library/user-event';
 import { UserContext } from '../../src/UserContext';
 
 describe('LoginPage', () => {
+    let spyAlert = vi.spyOn(window, 'alert').mockImplementation(vi.fn());
     let mockAxios;
     let mockSetUser = vi.fn();
     let mockSetLogout = vi.fn();
@@ -21,6 +21,7 @@ describe('LoginPage', () => {
         mockAxios.reset();
         mockSetUser.mockClear();
         mockSetLogout.mockClear();
+        spyAlert.mockClear();
     });
 
     it('should render the login page', () => {
@@ -77,7 +78,6 @@ describe('LoginPage', () => {
 
 
       it('successful login redirects the user', async () => {
-        vi.spyOn(window, 'alert');
         const mockUser = { id: '123', name: 'Test User', email: 'testuser@example.com', password: 'password123'};
     
         // Mock erfolgreiche API Antwort
@@ -98,6 +98,7 @@ describe('LoginPage', () => {
         await waitFor(() => {
             expect(mockSetUser).toHaveBeenCalled(1)
             expect(mockSetLogout).toHaveBeenCalledWith(false);
+            expect(spyAlert).toHaveBeenCalled(1);
         });
     
         // Überprüfen, ob die Weiterleitung erfolgt
@@ -105,8 +106,6 @@ describe('LoginPage', () => {
       });
 
       it('shows error when password is not correct', async () => {
-        // Mock the window.alert
-        const alertSpy = await vi.spyOn(window, 'alert').mockImplementation(vi.fn());
 
         // Mock API Antwort für falsches Passwort
         mockAxios.onPost('/login').reply(200, { responseStatus: 'Password not Ok' });
@@ -128,19 +127,16 @@ describe('LoginPage', () => {
     
         // Warten auf die Anzeige der Fehlermeldung
         await waitFor(() => {
-          expect(alertSpy).toHaveBeenCalled(1);
+          expect(spyAlert).toHaveBeenCalled(1);
         });
     
         // Sicherstellen, dass setUser nicht aufgerufen wurde
         expect(mockSetUser).not.toHaveBeenCalled();
       });
     
-      it('shows error message when API call fails (catch block)', async () => {
-        // Mock the window.alert
-        const alertSpy = await vi.spyOn(window, 'alert').mockImplementation(vi.fn());
-        
+      it('shows error message when API call fails (catch block)', async () => {        
         // Simuliere einen Fehler bei der API-Anfrage
-        mockAxios.onPost('/login').networkError();
+        mockAxios.onPost('/login').reply(500);
     
         render(
           <UserContext.Provider value={{ setUser: mockSetUser, setLogout: mockSetLogout }}>
@@ -160,7 +156,7 @@ describe('LoginPage', () => {
     
         // Warten auf die Anzeige der Fehlermeldung
         await waitFor(() => {
-          expect(alertSpy).toHaveBeenCalled(1);
+          expect(spyAlert).toHaveBeenCalled(1);
         });
     
         // Sicherstellen, dass setUser nicht aufgerufen wurde

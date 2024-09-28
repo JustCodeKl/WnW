@@ -10,6 +10,7 @@ export function UserContextProvider({children}){
     const [ready, setReady] = useState(false);
     const [logout, setLogout] = useState(false);
     const [redirect, setRedirect] = useState('');
+    const [usersList, setUsersList] = useState([]);
 
     useEffect(() => {
         if(!user){
@@ -20,10 +21,14 @@ export function UserContextProvider({children}){
                 });
             
         }
-    }, [user])
+        axios.get('/users')
+        .then(response => 
+            setUsersList(response.data)
+        )
+    }, [user, usersList])
 
     return (
-       <UserContext.Provider value={{user, setUser, ready, logout, setLogout, redirect, setRedirect}}>
+       <UserContext.Provider value={{user, setUser, ready, logout, setLogout, redirect, setRedirect, usersList}}>
          {
             children
         }
