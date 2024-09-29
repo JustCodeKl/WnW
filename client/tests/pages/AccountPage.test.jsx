@@ -5,9 +5,18 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { UserContext } from '../../src/UserContext';
 import AccountPage from '../../src/pages/AccountPage';
 import axios from 'axios';
+import { Navigate } from 'react-router-dom';
 
 // Mock axios
 vi.mock('axios');
+vi.mock(import("react-router-dom"), async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    // your mocked methods
+    Navigate: vi.fn(() => null),
+  }
+})
 
 const mockUser = { name: 'John Doe', email: 'john@example.com' };
 
@@ -37,7 +46,7 @@ describe('AccountPage', () => {
 
   it('redirects to login if user is not authenticated', async () => {
     renderWithContext(null, true); // User not set, ready
-    expect(await screen.findByText('Login Page')).toBeInTheDocument();
+    expect(Navigate).toHaveBeenCalledWith({ to: '/login' }, {})
   });
 
   it('renders account details when user is authenticated', () => {
@@ -90,4 +99,21 @@ describe('AccountPage', () => {
         expect(window.location.pathname).toBe('/');
     });
   });
+
+  it('should redirect to Index Page when logout is true', async() => {
+    const setUserMock = vi.fn();
+    const setLogoutMock = vi.fn();
+
+    axios.post.mockResolvedValueOnce({}); // Mock axios logout response
+
+    render(
+      <MemoryRouter initialEntries={['/account']}>
+        <UserContext.Provider value={{ ready: true, user: mockUser, setUser: setUserMock, logout: true, setLogout: setLogoutMock }}>
+          <AccountPage />
+        </UserContext.Provider>
+      </MemoryRouter>
+    );
+
+    expect(Navigate).toHaveBeenCalledWith({ to: '/' }, {})
+  })
 });
