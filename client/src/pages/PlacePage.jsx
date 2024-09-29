@@ -6,6 +6,8 @@ import { differenceInCalendarDays } from "date-fns";
 import { UserContext } from "../UserContext";
 
 export default function PlacePage() {
+  const {user} = useContext(UserContext);
+
   const { id } = useParams();
   const [place, setPlace] = useState();
   const [allPhotos, setAllPhotos] = useState(false);
@@ -16,7 +18,6 @@ export default function PlacePage() {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState(0);
   const [redirect, setRedirect] = useState('');
-  const {user} = useContext(UserContext);
 
   let numberOfNights = 0;
   if (checkIn && checkOut)
@@ -26,7 +27,7 @@ export default function PlacePage() {
     );
 
   useEffect(() => {
-    if (user) setName(user.name);
+    if (user) setName(user?.name);
     axios.get(`/places/${id}`).then((response) => {
       setPlace(response.data);
     });
@@ -43,6 +44,7 @@ export default function PlacePage() {
             Photos of {place?.title}
           </h1>
           <button
+            role="delete"
             type="button"
             className="flex text-center bg-primary text-white p-2 hover:bg-white hover:text-black hover:font-bold  fixed right-8 font-bold -mt-9"
             onClick={() => setAllPhotos(false)}
@@ -69,7 +71,7 @@ export default function PlacePage() {
               src={"http://localhost:4000/uploads/" + photo?.newName}
               alt=""
               className="object-cover h-[500px] w-[-webkit-fill-available]"
-              key={index + photo?.newName}
+              key={index + photo?.newName} role="img"
             />
           ))}
         </div>
@@ -136,7 +138,7 @@ export default function PlacePage() {
               src={
                 "http://localhost:4000/uploads/" + place?.photos?.[0]?.newName
               }
-              alt=""
+              alt="img"
               onClick={() => setAllPhotos(true)}
               className="rounded-tl-lg object-cover w-full h-[400px] cursor-pointer"
             />
@@ -148,7 +150,7 @@ export default function PlacePage() {
               src={
                 "http://localhost:4000/uploads/" + place?.photos?.[1]?.newName
               }
-              alt=""
+              alt="img"
               onClick={() => setAllPhotos(true)}
               className="rounded-tr-lg object-cover h-[400px] w-full cursor-pointer"
             />
@@ -160,7 +162,7 @@ export default function PlacePage() {
               src={
                 "http://localhost:4000/uploads/" + place?.photos?.[2]?.newName
               }
-              alt=""
+              alt="img"
               onClick={() => setAllPhotos(true)}
               className="rounded-bl-lg object-cover h-[400px] w-full cursor-pointer"
             />
@@ -172,7 +174,7 @@ export default function PlacePage() {
               src={
                 "http://localhost:4000/uploads/" + place?.photos?.[3]?.newName
               }
-              alt=""
+              alt="img"
               onClick={() => setAllPhotos(true)}
               className="rounded-br-lg object-cover h-[400px] w-full cursor-pointer"
             />
@@ -238,10 +240,11 @@ export default function PlacePage() {
           <div className="border-2 rounded-lg my-4 border-gray-400">
             <div className="flex">
               <div className="py-3 px-4">
-                <label htmlFor="date-in" className="font-bold">
+                <label htmlFor="date-in" className="font-bold" >
                   CHECK-IN
                 </label>
                 <input
+                  role="checkin"
                   type="date"
                   name="date-in"
                   id=""
@@ -250,10 +253,11 @@ export default function PlacePage() {
                 />
               </div>
               <div className="py-3 px-4 border-l-2 border-gray-400">
-                <label htmlFor="date-out" className="font-bold text-center">
+                <label htmlFor="date-out" className="font-bold text-center"  >
                   CHECK-OUT
                 </label>
                 <input
+                  role="checkout"
                   type="date"
                   name="date-out"
                   id=""
