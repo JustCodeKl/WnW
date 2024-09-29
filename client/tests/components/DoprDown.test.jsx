@@ -11,10 +11,11 @@ vi.mock('@material-tailwind/react', () => ({
     MenuList: ({ children }) => <div>{children}</div>,
     MenuItem: ({ children, onClick }) => <div onClick={onClick}>{children}</div>,
   }));
-  
+let setNbGuests = vi.fn();
+
   describe('DropDown Component', () => {
     it('renders the dropdown button with initial number of guests', () => {
-      render(<DropDown guestsNumber={5} nbGuests={1} setNbGuests={vi.fn()} />);
+      render(<DropDown guestsNumber={5} nbGuests={1} setNbGuests={setNbGuests} />);
   
       // Check if the button with the initial number of guests is rendered
       expect(screen.getByRole('button'), {name: '1'}).toBeInTheDocument(); // Initial guest number is 1
@@ -22,7 +23,7 @@ vi.mock('@material-tailwind/react', () => ({
   
     it('renders the correct number of guest options when the dropdown is clicked', async () => {
       const user = userEvent.setup();
-      render(<DropDown guestsNumber={5} nbGuests={1} setNbGuests={vi.fn()} />);
+      render(<DropDown guestsNumber={5} nbGuests={1} setNbGuests={setNbGuests} />);
   
       // Click the dropdown button to show the menu
       const button = screen.getByRole('button');
@@ -34,6 +35,10 @@ vi.mock('@material-tailwind/react', () => ({
       expect(screen.getByText('3')).toBeInTheDocument();
       expect(screen.getByText('4')).toBeInTheDocument();
       expect(screen.getByText('5')).toBeInTheDocument();
+
+      await user.click(screen.getByText('4'));
+      expect(setNbGuests).toHaveBeenCalledWith(4)
+
     });
 
 })
