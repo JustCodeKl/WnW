@@ -26,12 +26,13 @@ jobs:
             yarn
   test:
     runs-on: ubuntu-latest
+    needs: build
     steps:
-      - name: Run tests
-        run: |
-              cd ./client
-              yarn test
-      - name: Run coverage
-        run: |
-              cd ./client
-              yarn coverage
+    - name: Run tests
+      run: |
+            cd ./client
+            yarn test
+    - name: Run coverage
+      run: |
+            cd ./client
+            yarn coverage
