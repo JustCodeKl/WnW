@@ -154,11 +154,13 @@ app.post('/places', async (req, res) => {
 
 app.get('/user-places', async(req, res) => {
     const {token} = req.cookies;
-    jwt.verify(token, jwtSecret, {}, async (err, result) => {
-        if(err) throw err;
-        const {id} = result;
-        res.json( await Place.find({owner: id}));
-    });
+    if(token){
+        jwt.verify(token, jwtSecret, {}, async (err, result) => {
+            if(err) throw err;
+            const {id} = result;
+            res.json( await Place.find({owner: id}));
+        });
+    }
 });
 
 app.get('/places', async(req, res) => {

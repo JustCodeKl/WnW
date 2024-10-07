@@ -19,6 +19,7 @@ export default function PlaceFormPage(){
     const [redirect, setRedirect] = useState(false);
     const [price, setPrice] = useState(50)
     const {id} = useParams();
+    const perksList = ['Wifi', 'Parking', 'TV', 'Pets', 'Kitchen']
 
     useEffect(() => {
         if(!id) return;
@@ -85,7 +86,7 @@ export default function PlaceFormPage(){
                             <textarea id="description" value={description} onChange={e => change(e, setDescription)}/>
                             <h2 className="text-2xl mt-4">Perks</h2>
                             <p className="text-gray-400 text-sm">Select all the perks of your place.</p> 
-                            <PerksLabel selected={perks} onChange={setPerks}/>
+                            <PerksLabel selected={perks} onChange={setPerks} perksList={perksList}/>
                             <h2 className="text-2xl mt-4">Extra info</h2>
                             <p className="text-gray-400 text-sm -mb-3">Information about the house rules.</p> 
                             <textarea value={extraInfo} onChange={e => change(e, setExtraInfo)}/>

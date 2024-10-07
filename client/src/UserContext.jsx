@@ -26,9 +26,11 @@ export function UserContextProvider({children}){
         .then(response => 
             setUsersList(response.data)
         );
-        axios.get("/user-places").then((response) => {
-            setAddedPlacesList(response.data);
-          });
+        if(user){
+            axios.get("/user-places").then((response) => {
+                setAddedPlacesList(response.data);
+              });
+        }
         
     }, [user, usersList])
 
