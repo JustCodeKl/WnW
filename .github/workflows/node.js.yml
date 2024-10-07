@@ -29,10 +29,6 @@ jobs:
     needs: build
     steps:
     - name: Run tests
-      run: |
-            cd ./client
-            yarn test
+      run:  yarn test
     - name: Run coverage
-      run: |
-            cd ./client
-            yarn coverage
+      run:  yarn coverage
