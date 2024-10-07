@@ -24,11 +24,14 @@ jobs:
       run: |
             cd ./client
             yarn
-    - name: Run tests
-      run: |
-            cd ./client
-            yarn test
-    - name: Run coverage
-      run: |
-            cd ./client
-            yarn coverage
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tests
+        run: |
+              cd ./client
+              yarn test
+      - name: Run coverage
+        run: |
+              cd ./client
+              yarn coverage
